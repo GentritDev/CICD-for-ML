@@ -10,6 +10,11 @@ import skops.io as sio
 
 df = pd.read_csv("Data/tickets.csv")
 
+df = df.rename(columns={
+    "Ticket Description": "ticket_description",
+    "Ticket Type": "ticket_type"
+})
+
 df = df.dropna(subset=["ticket_description", "ticket_type"])
 df = df.sample(frac=1, random_state=125) # Shartimi i të dhënave
 
