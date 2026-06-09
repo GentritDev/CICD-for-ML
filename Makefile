@@ -20,11 +20,9 @@ update-branch:
 	git config --global user.email $(USER_EMAIL)
 	git commit -am "Update with new results"
 	git config --global pull.rebase true
-	git pull origin update
+	git pull origin main
 
 hf-login:
-	git fetch origin update
-	git reset --hard origin/update
 	pip install -U "huggingface_hub[cli]"
 	hf auth login --token $(HF)
 
