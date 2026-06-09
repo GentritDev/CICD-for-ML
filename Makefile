@@ -25,11 +25,12 @@ update-branch:
 hf-login:
 	git fetch origin update
 	git reset --hard origin/update
+	pip install -U "huggingface_hub[cli]"
 	hf auth login --token $(HF)
 
 push-hub:
-	hf upload Genti123/Customer-Support-Classifier ./App . --repo-type=space
+	hf upload Genti123/Customer-Support-Classifier ./App --repo-type=space
 	hf upload Genti123/Customer-Support-Classifier ./Model /Model --repo-type=space
 	hf upload Genti123/Customer-Support-Classifier ./Results /Metrics --repo-type=space
 
-deploy: hf-login push-hub
+deploy: hf-login push-hubb
