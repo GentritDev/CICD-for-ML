@@ -1,8 +1,11 @@
 import gradio as gr
 import skops.io as sio
+from skops.io import get_untrusted_types
 
 
-pipe = sio.load("./Model/ticket_pipeline.skops", trusted=True)
+
+unknown_types = get_untrusted_types(file="./Model/ticket_pipeline.skops")
+pipe = sio.load("./Model/ticket_pipeline.skops", trusted=unknown_types)
 
 def predict_ticket_type(ticket_description):
     if not ticket_description.strip():
