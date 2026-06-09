@@ -4,3 +4,4 @@ scikit-learn
 pydub
 pandas
 matplotlib
+black
