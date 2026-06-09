@@ -1,6 +1,7 @@
 import gradio as gr
 import skops.io as sio
 
+
 pipe = sio.load("./Model/ticket_pipeline.skops", trusted=True)
 
 def predict_ticket_type(ticket_description):
