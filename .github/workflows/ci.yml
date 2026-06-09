@@ -12,13 +12,23 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+
+      - name: Install system dependencies for CML
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libcairo2-dev libpango1.0-dev libjpeg-dev libgif-dev librsvg2-dev libpixman-1-dev
+
       - uses: iterative/setup-cml@v2
+      
       - name: Install Packages
         run: make install
+        
       - name: Format
         run: make format
+        
       - name: Train
         run: make train
+        
       - name: Evaluation
         env:
           REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
