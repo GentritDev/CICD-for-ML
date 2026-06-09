@@ -1,8 +1,6 @@
 gradio
 skops
 scikit-learn
-pydub
 pandas
 matplotlib
 black
-audioop-lts
