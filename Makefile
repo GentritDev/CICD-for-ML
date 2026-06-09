@@ -23,15 +23,14 @@ update-branch:
 	git pull origin update
 
 hf-login:
-	git config --global pull.rebase true
-	git pull origin update
-	git switch update
+	git fetch origin update
+	git reset --hard origin/update
 	pip install -U "huggingface_hub[cli]"
 	huggingface-cli login --token $(HF) --add-to-git-credential
 
 push-hub:
-	huggingface-cli upload HF/Customer-Support-Classifier ./App --repo-type=space --commit-message="Sync App files"
-	huggingface-cli upload HF/Customer-Support-Classifier ./Model /Model --repo-type=space --commit-message="Sync Model"
-	huggingface-cli upload HF/Customer-Support-Classifier ./Results /Metrics --repo-type=space --commit-message="Sync Metrics"
+	huggingface-cli upload Genti123/Customer-Support-Classifier ./App --repo-type=space --commit-message="Sync App files"
+	huggingface-cli upload Genti123/Customer-Support-Classifier ./Model /Model --repo-type=space --commit-message="Sync Model"
+	huggingface-cli upload Genti123/Customer-Support-Classifier ./Results /Metrics --repo-type=space --commit-message="Sync Metrics"
 
 deploy: hf-login push-hub
