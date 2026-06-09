@@ -2,10 +2,9 @@
 title: Customer Support Classifier
 emoji: 🎫
 colorFrom: blue
-colorTo: purple
+colorTo: green
 sdk: gradio
-sdk_version: 4.31.5
+sdk_version: "5.29.0"
 app_file: ticket_app.py
 pinned: false
-license: apache-2.0
 ---
