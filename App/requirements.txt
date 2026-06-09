@@ -1,4 +1,6 @@
-gradio
-pyaudioop
+gradio>=5.0.0
 skops
 scikit-learn
+pandas
+matplotlib
+black
