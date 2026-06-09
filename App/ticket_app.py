@@ -2,24 +2,16 @@ import gradio as gr
 import skops.io as sio
 from skops.io import get_untrusted_types
 
-
-
-
-
-
 unknown_types = get_untrusted_types(file="./Model/ticket_pipeline.skops")
 pipe = sio.load("./Model/ticket_pipeline.skops", trusted=unknown_types)
 
 def predict_ticket_type(ticket_description):
     if not ticket_description.strip():
-        return "Ju lutem shkruani një përshkrim valid."
-    
-    
+        return "Please enter a valid ticket description."
     predicted_type = pipe.predict([ticket_description])[0]
-    return f"Kategoria e Parashikuar: {predicted_type}"
+    return f"Predicted Category: {predicted_type}"
 
-# UI input dhe output
-inputs = [gr.Textbox(lines=5, label="Përshkruani problemin tuaj (Ticket Description)", placeholder="Shkruaj këtu...")]
+inputs = [gr.Textbox(lines=5, label="Ticket Description", placeholder="Describe your issue here...")]
 outputs = [gr.Label(num_top_classes=3)]
 
 examples = [
@@ -28,15 +20,12 @@ examples = [
     ["How can I change my password and update my profile phone number?"]
 ]
 
-title = "Customer Support Ticket Classifier"
-description = "Sistemi automatik i klasifikimit të tiketave mbështetëse duke përdorur Machine Learning dhe CI/CD."
-
 gr.Interface(
     fn=predict_ticket_type,
     inputs=inputs,
     outputs=outputs,
     examples=examples,
-    title=title,
-    description=description,
+    title="Customer Support Ticket Classifier",
+    description="Automatically classifies customer support tickets using a Machine Learning pipeline with CI/CD automation.",
     theme=gr.themes.Soft(),
 ).launch()
