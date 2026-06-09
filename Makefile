@@ -33,4 +33,4 @@ push-hub:
 	hf upload Genti123/Customer-Support-Classifier ./Model /Model --repo-type=space
 	hf upload Genti123/Customer-Support-Classifier ./Results /Metrics --repo-type=space
 
-deploy: hf-login push-hubb
+deploy: hf-login push-hub
