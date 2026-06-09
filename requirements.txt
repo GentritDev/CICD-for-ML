@@ -1,6 +1,6 @@
-pandas
-scikit-learn
-skops
-matplotlib
-black
 gradio
+skops
+scikit-learn
+pydub
+pandas
+matplotlib
