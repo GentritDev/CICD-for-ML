@@ -12,12 +12,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-
       - name: Install system dependencies for CML
         run: |
           sudo apt-get update
           sudo apt-get install -y libcairo2-dev libpango1.0-dev libjpeg-dev libgif-dev librsvg2-dev libpixman-1-dev
-
       - uses: iterative/setup-cml@v2
       
       - name: Install Packages
@@ -28,6 +26,14 @@ jobs:
         
       - name: Train
         run: make train
+
+      - name: Commit trained model
+        run: |
+          git config --global user.name "github-actions"
+          git config --global user.email "actions@github.com"
+          git add Model/ticket_pipeline.skops
+          git diff --staged --quiet || git commit -m "Update trained model"
+          git push
         
       - name: Evaluation
         env:
