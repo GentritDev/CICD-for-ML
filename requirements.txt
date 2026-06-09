@@ -5,3 +5,4 @@ pydub
 pandas
 matplotlib
 black
+audioop-lts
