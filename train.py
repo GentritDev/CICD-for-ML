@@ -5,77 +5,56 @@ from sklearn.model_selection import train_test_split
 from sklearn.pipeline import Pipeline
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.svm import LinearSVC
-from sklearn.metrics import (
-    accuracy_score, f1_score,
-    ConfusionMatrixDisplay, confusion_matrix,
-    classification_report
-)
-from sklearn.utils.class_weight import compute_class_weight
-import numpy as np
+from sklearn.metrics import accuracy_score, f1_score, ConfusionMatrixDisplay, confusion_matrix
 import skops.io as sio
 
-# Load and clean
 df = pd.read_csv("Data/tickets.csv")
+
 df = df.rename(columns={
     "Ticket Description": "ticket_description",
-    "Ticket Type": "ticket_type"
+    "Ticket Type": "ticket_type",
+    "Ticket Subject": "ticket_subject"
 })
-df = df.dropna(subset=["ticket_description", "ticket_type"])
 
-# Log class distribution
-print("Class distribution:")
-print(df["ticket_type"].value_counts())
-print()
+df = df.dropna(subset=["ticket_description", "ticket_type", "ticket_subject"])
+df = df.sample(frac=1, random_state=125) 
 
-X = df["ticket_description"].values
+df["combined_text"] = df["ticket_subject"] + " " + df["ticket_description"]
+
+X = df["combined_text"].values
 y = df["ticket_type"].values
 
 X_train, X_test, y_train, y_test = train_test_split(
-    X, y, test_size=0.3, random_state=125, stratify=y
+    X, y, test_size=0.3, random_state=125
 )
-
 
 pipe = Pipeline(
     steps=[
-        ("tfidf", TfidfVectorizer(
-            max_features=5000,
-            stop_words="english",
-            ngram_range=(1, 2),      
-            sublinear_tf=True        
-        )),
-        ("model", LinearSVC(
-            random_state=125,
-            class_weight="balanced", 
-            max_iter=2000
-        )),
+
+        ("tfidf", TfidfVectorizer(max_features=10000, stop_words="english", ngram_range=(1, 2))),
+        ("model", LinearSVC(class_weight="balanced", random_state=125, C=0.5)),
     ]
 )
 
 pipe.fit(X_train, y_train)
-predictions = pipe.predict(X_test)
 
+predictions = pipe.predict(X_test)
 accuracy = accuracy_score(y_test, predictions)
 f1 = f1_score(y_test, predictions, average="macro")
 
-print(f"Accuracy: {round(accuracy * 100, 1)}% | Macro F1: {round(f1, 3)}")
-print()
-
-report = classification_report(y_test, predictions)
-print(report)
+print(f"Accuracy: {round(accuracy, 2) * 100}% | F1: {round(f1, 2)}")
 
 os.makedirs("Results", exist_ok=True)
 
 with open("Results/metrics.txt", "w") as outfile:
-    outfile.write(f"Accuracy = {accuracy:.2f}, F1 Score = {f1:.2f}\n\n")
-    outfile.write("Per-class metrics:\n")
-    outfile.write(report)
+    outfile.write(f"\nAccuracy = {accuracy:.2f}, F1 Score = {f1:.2f}.")
 
 cm = confusion_matrix(y_test, predictions, labels=pipe.classes_)
-fig, ax = plt.subplots(figsize=(8, 6))
 disp = ConfusionMatrixDisplay(confusion_matrix=cm, display_labels=pipe.classes_)
-disp.plot(ax=ax)
-plt.xticks(rotation=45, ha="right")
+disp.plot()
+plt.xticks(rotation=45)
 plt.tight_layout()
 plt.savefig("Results/model_results.png", dpi=120)
 
+# 7. Ruajtja e Modelit të ri
 sio.dump(pipe, "Model/ticket_pipeline.skops")
